@@ -60,7 +60,7 @@ PouchDB.destroy('dbname', function(err, info) { });
 
 ### Using db.put()
 {% highlight js %}
-db.put(doc, [options], [callback])
+db.put(doc, [_id], [_rev], [options], [callback])
 {% endhighlight %}
 
 Create a new document or update an existing document. If the document already exists you must specify its revision `_rev`, otherwise a conflict will occur.
@@ -72,23 +72,20 @@ There are some restrictions on valid property names of the documents, these are 
 ## Create a new doc with id.
 {% highlight js %}
 db.put({
-  _id: 'mydoc',
   title: 'Heroes'
-}, function(err, response) { });
+}, 'mydoc').then(function(esponse) { });
 {% endhighlight %}
 
 ## Update an existing doc
 {% highlight js %}
 db.get('myOtherDoc', function(err, resp) {
   db.put({
-    _id: 'myOtherDoc',
-    _rev: resp._rev,
     title: 'Lets Dance',
-  }, function(err, response) { });
+  }, 'myOtherDoc', resp._rev, function(err, response) { });
 });
 {% endhighlight %}
 
-## with a promise
+## you can include the _id and _rev in the document too if you want.
 {% highlight js %}
 db.get('myOtherDoc').then(function(resp) {
   return db.put({
